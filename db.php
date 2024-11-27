@@ -1,7 +1,7 @@
 <?php
 function getDbConn() {
     $host = "localhost";
-    $db_name = "restaurantms";
+    $db_name = "tableres";
     $username = "root";
     $password = "";
     

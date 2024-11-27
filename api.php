@@ -1,77 +1,159 @@
 <?php
 include_once("model.php");
 
-session_start();
-if (!isset($_SESSION["id"])) {
-    echo json_encode(["status" => "503", "message" => "You are unauthorized to access this."]);
-    return;
-}
-
-// Tables
-// GET all tables
-if (isset($_GET["tables"])) {
-    if ($_GET["tables"] == "all") {
-        $tables = toDb("SELECT t.`id` AS id, t.`status` AS status, r.`name` AS res_name, r.`date` AS res_date
-                FROM tables AS t
-                LEFT JOIN reservations AS r
-                ON t.`id`=r.`table_id`
-                AND DATE(r.`date`)=CURRENT_DATE()
-                ORDER BY t.`id`");
-
-        $tablesOrders = toDb("SELECT tors.`table_id` AS table_id, m.`id` AS menu_id, m.`name` AS name, tors.`requests` AS requests, tors.`is_fulfilled` AS is_fulfilled
-                FROM tables_orders AS tors
-                INNER JOIN menu AS m
-                ON tors.`menu_id`=m.`id`
-                AND m.`date_removed` IS NULL");
-
-        foreach($tablesOrders as $order) {
-            $tableIndex = $order["table_id"]-1;
-            if (!isset($tables[$tableIndex]["orders"])) {
-                $tables[$tableIndex]["orders"] = [];
-            }
-
-            array_push($tables[$tableIndex]["orders"], ["menu_id" => $order["menu_id"], "name" => $order["name"], "is_fulfilled" => $order["is_fulfilled"]]);
-        }
-
-        $tableTemplate = file_get_contents("partials/_table_template.php");
-
-        echo json_encode(["status" => "200", "tables" => $tables, "tables_orders" => $tablesOrders, "template" => $tableTemplate]);
+function sessionCheck() {
+    session_start();
+    if (!isset($_SESSION["id"])) {
+        echo json_encode(["status" => "503", "message" => "You are unauthorized to access this."]);
         return;
     }
 }
 
-if (isset($_GET["table"]) && $_GET["table"] == "update") {
-
-}
-
-
 // Reservations
 // GET all reservations
-if (isset($_GET["reservations"])) {
+if (isset($_GET["reservations"]) && empty($_GET["reservations"])) {
+    sessionCheck();
+    $resCode = "";
+    $resDate = "CURDATE()";
 
+    if ($_GET["date"] != "") {
+        $resDate = $_GET["date"];
+    }
+
+    if ($_GET["res_code"] != "") {
+        $resCode = $_GET["res_code"];
+    }
+
+    $query = "SELECT r.`id`, r.`code`, r.`name`, r.`guests_num`, r.`res_date`, t.`timeslot`
+                FROM reservations AS r
+                INNER JOIN timeslots AS t
+                ON r.`timeslot_id`=t.`id`
+                WHERE r.res_date=:resDate
+                OR r.code=:resCode";
+    $rows = toDb($query, [":resDate" => $resDate, ":resCode" => $resCode]);
+
+    if (isset($rows["status"]) && $rows["status"] == "500") {
+        echo json_encode($rows);
+        return;
+    }
+
+    echo json_encode(["status" => "200", "rows" => $rows]);
+    return;
 }
 
+// POST new reservation
+if (isset($_POST["reservations"]) && $_POST["reservations"] == "new") {
+    sessionCheck();
+    unset($_POST["reservations"]);
 
-// Menu
-// GET all menu items
-if (isset($_GET["menu"])) {
+    $_POST["code"] = base_convert(implode("", explode("-", $_POST["res_date"])).$_POST["timeslot_id"], 10, 32);
 
+    foreach ($_POST as $key => $value) {
+        if (empty($_POST[$key])) {
+            $_POST[$key] = NULL;
+        }
+    }
+
+    $query = "INSERT INTO reservations(`code`, `name`, `email`, `phone`, `guests_num`, `res_date`, `timeslot_id`) VALUES (:code, :name, :email, :phone, :guests_num, :res_date, :timeslot_id)";
+    $rows = toDb($query, $_POST);
+
+    if (isset($rows["status"]) && $rows["status"] == "500") {
+        echo json_encode($rows);
+        return;
+    }
+
+    echo json_encode(["status" => "200", "rows" => $rows]);
+    return;
 }
 
+// POST update reservation
+if (isset($_POST["reservations"]) && $_POST["reservations"] == "update") {
+    sessionCheck();
+    unset($_POST["reservations"]);
+
+    foreach ($_POST as $key => $value) {
+        if (empty($_POST[$key])) {
+            $_POST[$key] = NULL;
+        }
+    }
+
+    $query = "UPDATE reservations SET `name`=:name, `email`=:email, `phone`=:phone, `guests_num`=:guests_num, `res_date`=:res_date, `timeslot_id`=:timeslot_id WHERE `id`:id";
+    $rows = toDb($query, $_POST);
+
+    if (isset($rows["status"]) && $rows["status"] == "500") {
+        echo json_encode($rows);
+        return;
+    }
+
+    echo json_encode(["status" => "200", "rows" => $rows]);
+    return;
+}
+
+// POST delete Reservation
+if (isset($_GET["reservations"]) && $_GET["reservations"] == "delete") {
+    sessionCheck();
+
+    $query = "DELETE FROM reservations WHERE `id`=:id";
+    $rows = toDb($query, [":id" => $_GET["id"]]);
+
+    if (isset($rows["status"]) && $rows["status"] == "500") {
+        echo json_encode($rows);
+        return;
+    }
+
+    echo json_encode(["status" => "200", "message" => "Reservation deleted successfully!"]);
+    return;
+}
+
+// GET specific reservation
+if (isset($_GET["reservation"]) && !empty($_GET["reservation"])) {
+    sessionCheck();
+
+    $query = "SELECT r.`id`, r.`name`, r.`guests_num`, r.`res_date`, t.`timeslot`, r.`email`, r.`phone`
+                FROM reservations AS r
+                INNER JOIN timeslots AS t
+                ON r.`timeslot_id`=t.`id`
+                WHERE r.`id`=:id";
+    $rows = toDb($query, [":id" => $_GET["reservation"]]);
+
+    if (isset($rows["status"]) && $rows["status"] == "500") {
+        echo json_encode($rows);
+        return;
+    }
+
+    echo json_encode(["status" => "200", "rows" => $rows]);
+    return;
+}
+
+// Timeslots
+// GET all timeslots
+if (isset($_GET["timeslots"])) {
+    sessionCheck();
+    $query = "SELECT * FROM timeslots";
+    $rows = toDb($query);
+
+    if (isset($rows["status"]) && $rows["status"] == "500") {
+        echo json_encode($rows);
+        return;
+    }
+
+    echo json_encode(["status" => "200", "rows" => $rows]);
+    return;
+}
 
 // Auth
 if (isset($_GET["auth"]) && $_GET["auth"] == "check") {
+    sessionCheck();
     $query = "SELECT * FROM users WHERE `username`=:username";
 
     try {
         $query = $dbConn->prepare($query);
         $query->execute([":username" => $_GET["username"]]);
+        $rows = $query->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
         echo json_encode(["status" => "503", "message" => $e->getMessage()]);
         return;
     }
-
-    $rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
     if (count($rows) < 1 || !password_verify($_GET["password"], $rows[0]["password"])) {
         echo json_encode(["status" => "503", "message" => "Invalid credentials."]);
@@ -79,5 +161,38 @@ if (isset($_GET["auth"]) && $_GET["auth"] == "check") {
     }
     
     echo json_encode(["status" => "200", "message" => "Credentials verified."]);
+    return;
+}
+
+// Accounts
+// POST new user account (default to customer)
+if (isset($_POST["account"]) && $_POST["account"] == "new") {
+    unset($_POST["account"]);
+
+    $query = "SELECT `id` FROM users WHERE `email`=:email OR `username`=:username";
+
+    $rows = toDb($query, [":email" => $_POST["email"], ":username" => $_POST["username"]]);
+
+    if (isset($rows["status"]) && $rows["status"] == "500") {
+        echo json_encode($rows);
+        return;
+    }
+
+    if (count($rows) != 0) {
+        echo json_encode(["status" => "200", "message" => "User already exists!"]);
+        return;
+    }
+
+    $_POST["password"] = password_hash($_POST["password"], PASSWORD_DEFAULT);
+
+    $query = "INSERT INTO users(`username`, `email`, `password`, `name`) VALUES (:username, :email, :password, :name)";
+    $rows = toDb($query, [
+        ":username" => $_POST["username"],
+        ":email" => $_POST["email"],
+        ":password" => $_POST["password"],
+        ":name" => $_POST["name"],
+    ]);
+
+    echo json_encode(["status" => "200", "message" => "User registered successfully!"]);
     return;
 }

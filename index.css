@@ -1,0 +1,63 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #999;
+}
+
+div.jumbotron#hero {
+    height: calc(100% - 54px);
+    background-image: url(https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmVzdGF1cmFudHxlbnwwfHwwfHx8MA%3D%3D);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+div.jumbotron#hero>div {
+    width: calc(100% + 12px);
+}
+
+button#scroll-top {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+}
+
+footer form {
+    width: 500px;
+    min-width: 400px;
+}
+
+div.carousel-inner img {
+    height: 650px;
+    width: 1200px;
+    object-fit: cover;
+    object-position: center center;
+}
+
+div.carousel-inner div.carousel-item {
+    text-align: center;
+}
+
+div#dine-img-container {
+    padding-bottom: 50px;
+}
+
+@media only screen and (max-width: 1000px) {
+    div#dine-img-container {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    footer form {
+        padding: 0;
+        width: 100%;
+    }
+
+    div.carousel-inner img {
+        height: 500px;
+        width: 100%;
+    }
+}

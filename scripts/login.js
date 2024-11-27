@@ -26,9 +26,16 @@ loginForm.onsubmit = (element) => {
             "password": password,
         }),
     ).then(response => {
+        try {
+            response = JSON.parse(response);
+        } catch(e) {
+            console.log(e);
+            return;
+        }
+
         switch (response["status"]) {
             case "200":
-                window.location.href = "/dashboard.php";
+                window.location.href = "dashboard.php";
                 break;
             case "401":
                 loginMessage.setAttribute("danger-bg", "");

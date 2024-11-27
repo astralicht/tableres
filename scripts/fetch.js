@@ -11,7 +11,7 @@ async function asyncFetch(
     });
 
     if (response.ok) {
-        let json = await response.json();
+        let json = await response.text();
         return json;
     }
 }

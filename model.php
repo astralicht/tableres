@@ -9,6 +9,6 @@ function toDb($query, $params = []) {
         $query->execute($params);
         return $query->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        return json_encode(["status" => "500", "message" => "Internal server error. Contact the web admin to fix this issue.", "exception_message" => $e->getMessage()]);
+        return ["status" => "500", "message" => "Internal server error. Contact the web admin to fix this issue.", "exception_message" => $e->getMessage()];
     }
 }

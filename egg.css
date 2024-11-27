@@ -219,7 +219,7 @@ h1, [font-size=biggest] {
 /*****/
 
 /* Form and Input */
-form input {
+input {
     padding: var(--pad);
     border: 1px solid var(--white-color);
     outline: none;
@@ -229,11 +229,11 @@ form input {
     box-shadow: var(--box-shadow);
 }
 
-form input:focus {
+input:focus {
     box-shadow: var(--box-shadow-focus);
 }
 
-form label {
+label {
     display: block;
     margin-bottom: 8px;
 }

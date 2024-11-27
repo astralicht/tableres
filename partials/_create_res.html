@@ -1,0 +1,38 @@
+<div id="create-res">
+    <div flex="v">
+        <div flex="h" v-center>
+            <button id="back-button" dark-bg style="width: 50px; height: 50px;"><i class="fa-solid fa-chevron-left" white-fr></i></button>
+            <h4 class="partial-title">Create Reservation</h4>
+        </div>
+        <form method="POST" id="create-res" flex="v" enctype="application/x-www-form-urlencoded">
+            <div>
+                <label for="name">Name <span danger-fr>*Required</span></label>
+                <input type="text" id="name" name="name" placeholder="Aa" required>
+            </div>
+            <div>
+                <label for="email">Email <span danger-fr>*Required</span></label>
+                <input type="email" id="email" name="email" placeholder="Aa" required>
+            </div>
+            <div>
+                <label for="name">Phone Number</label>
+                <input type="text" id="phone" name="phone" placeholder="123">
+            </div>
+            <div>
+                <label for="guests-num">Number of Guests <span danger-fr>*Required</span></label>
+                <input type="number" id="guests-num" name="guests_num" placeholder="123" required>
+            </div>
+            <div>
+                <label for="res-date">Reservation Date <span danger-fr>*Required</span></label>
+                <input type="date" id="res-date" name="res_date" placeholder="Aa" required>
+            </div>
+            <div>
+                <label for="res-date">Timeslot <span danger-fr>*Required</span></label>
+                <select id="timeslot" name="timeslot_id" full-width required></select>
+            </div>
+            <div flex="h" v-center>
+                <button type="reset" dark-bg white-fr full-width>Cancel</button>
+                <button type="submit" good-bg white-fr full-width>Submit</button>
+            </div>
+        </form>
+    </div>
+</div>

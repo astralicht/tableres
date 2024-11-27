@@ -67,105 +67,46 @@ div.spa-content-container > div {
     transition: opacity .15s;
 }
 
-input#res-date-filter {
+input#date-filter {
     width: 175px;
 }
 
-div.tables-container {
-    gap: 16px;
-    flex-wrap: wrap;
+table, thead {
+    background-color: var(--dark-color);
 }
 
-div.tables-container div.table {
-    position: relative;
-    height: 175px;
-    width: 300px;
-    min-height: 175px;
-    min-width: 300px;
-    cursor: pointer;
-    overflow: hidden;
-    display: none;
-    opacity: 0;
-    transition: opacity .15s ease-in-out;
+tr:nth-child(even) {
+    background-color: #555;
 }
 
-div.tables-container div.table-spacer {
-    display: none;
+tr:nth-child(odd) {
+    background-color: var(--dark-color);
 }
 
-div.tables-container div.table:hover {
-    background-image: linear-gradient(rgb(0 0 0 / .15) 0 0);
+th, td {
+    border-radius: 0; 
 }
 
-div.tables-container div.table div.open-indicator {
-    position: absolute;
-    right: 8px;
-    bottom: 4px;
+input#date-filter {
+    padding: 10px 16px;
 }
 
-div.tables-container div.table-header {
-    display: flex;
-    align-items: center;
-    gap: var(--gap);
+div#table-res-container{
+    overflow-x: auto;
+    width: 100%;
 }
 
-div.tables-container div.table ul.order-list {
-    list-style-type: none;
-}
-
-div.tables-container div.table ul.order-list > li {
-    display: flex;
-    align-items: center;
-    gap: var(--gap);
-}
-
-div.table-modal {
-    display: none;
-    opacity: 0;
-    transition: opacity .15s;
-    background-color: rgb(0 0 0 / .5);
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-div.table-modal div.table-info-container {
-    height: calc(100% - 32px);
-    width: 600px;
-    overflow: auto;
-    transition: background-color .15s ease-in-out;
-    padding: 16px 32px;
-}
-
-div.table-modal div.modal-header select#status-dropdown {
-    height: 54px;
-    padding: 0 16px;
-    border: none;
-}
-
-div.table-modal div.modal-header button#delete-table {
-    height: 53px;
-    border: 1px solid var(--danger-color);
-}
-
-div.table-modal div.modal-header button#delete-table:hover {
-    background-color: var(--danger-color);
-    color: white;
-}
-
-div.table-modal div.modal-body ul.order-list > li {
-    display: flex;
-    align-items: center;
-    gap: var(--gap);
+div#table-res-container table#res-table {
+    min-width: 1000px;
+    width: 100%;
 }
 
 @media only screen and (max-width: 1000px) {
-    /* div#spa-menu {
+    div#spa-menu {
         display: none;
-        opacity: 0;
-    } */
+    }
 
-    div.table-modal div.table-info-container {
-        width: calc(100% - 32px);
+    div#partials-container {
+        padding: 0;
     }
 }

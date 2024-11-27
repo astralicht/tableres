@@ -1,0 +1,36 @@
+<div id="reservations">
+    <div flex="v">
+        <div flex="h" v-center flex-wrap>
+            <div flex="h" v-center>
+                <h4 class="partial-title">Reservations</h4>
+                <button id="create-res" flex="h" h-center v-center primary-bg white-fr style="height: 45px; width: 50px;"><i class="fa-solid fa-plus"></i></button>
+            </div>
+            <div flex="h" grow v-center h-end>
+                <div flex="h" v-center flex-wrap>
+                    <div flex="h" v-center>
+                        <input type="text" id="code-filter" name="code_filter" placeholder="Search Reservation Code">
+                    </div>
+                    <div flex="h" v-center>
+                        <p id="date-filter-label" no-margin>Date Filter</p>
+                        <input type="date" id="date-filter" name="date_filter">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="table-res-container">
+            <table id="res-table">
+                <thead>
+                        <th width="200px">Reservation Code</th>
+                        <th width="300px">Name</th>
+                        <th width="125px"># of Guests</th>
+                        <th width="200px">Reservation Date</th>
+                        <th width="200px">Timeslot</th>
+                        <th width="200px">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <i pad id="res-table-message" full-width style="display: none; text-align: center;">No reservations.</i>
+    </div>
+</div>
