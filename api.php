@@ -16,21 +16,42 @@ if (isset($_GET["reservations"]) && empty($_GET["reservations"])) {
     $resCode = "";
     $resDate = "CURDATE()";
 
-    if ($_GET["date"] != "") {
+    if ($_GET["date"] != "" && $_GET["res_code"] == "") {
         $resDate = $_GET["date"];
-    }
 
-    if ($_GET["res_code"] != "") {
-        $resCode = $_GET["res_code"];
-    }
+        $query = "SELECT r.`id`, r.`code`, r.`name`, r.`guests_num`, r.`res_date`, t.`timeslot`
+                FROM reservations AS r
+                INNER JOIN timeslots AS t
+                ON r.`timeslot_id`=t.`id`
+                WHERE r.res_date=:resDate";
+        $rows = toDb($query, [":resDate" => $resDate]);
+    } else if ($_GET["date"] == "" && $_GET["res_code"] != "") {
+        $resCode = "%".$_GET["res_code"]."%";
 
-    $query = "SELECT r.`id`, r.`code`, r.`name`, r.`guests_num`, r.`res_date`, t.`timeslot`
+        $query = "SELECT r.`id`, r.`code`, r.`name`, r.`guests_num`, r.`res_date`, t.`timeslot`
+                FROM reservations AS r
+                INNER JOIN timeslots AS t
+                ON r.`timeslot_id`=t.`id`
+                WHERE r.code LIKE :resCode";
+        $rows = toDb($query, [":resCode" => $resCode]);
+    } else if ($_GET["date"] != "" && $_GET["res_code"] != "") {
+        $resDate = $_GET["date"];
+        $resCode = "%".$_GET["res_code"]."%";
+
+        $query = "SELECT r.`id`, r.`code`, r.`name`, r.`guests_num`, r.`res_date`, t.`timeslot`
                 FROM reservations AS r
                 INNER JOIN timeslots AS t
                 ON r.`timeslot_id`=t.`id`
                 WHERE r.res_date=:resDate
-                OR r.code=:resCode";
-    $rows = toDb($query, [":resDate" => $resDate, ":resCode" => $resCode]);
+                AND r.code LIKE :resCode";
+        $rows = toDb($query, [":resDate" => $resDate, ":resCode" => $resCode]);
+    } else {
+        $query = "SELECT r.`id`, r.`code`, r.`name`, r.`guests_num`, r.`res_date`, t.`timeslot`
+                FROM reservations AS r
+                INNER JOIN timeslots AS t
+                ON r.`timeslot_id`=t.`id`";
+        $rows = toDb($query);
+    }
 
     if (isset($rows["status"]) && $rows["status"] == "500") {
         echo json_encode($rows);
@@ -77,7 +98,17 @@ if (isset($_POST["reservations"]) && $_POST["reservations"] == "update") {
         }
     }
 
-    $query = "UPDATE reservations SET `name`=:name, `email`=:email, `phone`=:phone, `guests_num`=:guests_num, `res_date`=:res_date, `timeslot_id`=:timeslot_id WHERE `id`:id";
+    $params = [
+        ":name" => $_POST["name"],
+        ":email" => $_POST["email"],
+        ":phone" => $_POST["phone"],
+        ":guests_num" => $_POST["guests_num"],
+        ":res_date" => $_POST["res_date"],
+        ":timeslot_id" => $_POST["timeslot_id"],
+        ":id" => $_POST["id"],
+    ];
+
+    $query = "UPDATE reservations SET `name`=:name, `email`=:email, `phone`=:phone, `guests_num`=:guests_num, `res_date`=:res_date, `timeslot_id`=:timeslot_id WHERE `id`=:id";
     $rows = toDb($query, $_POST);
 
     if (isset($rows["status"]) && $rows["status"] == "500") {

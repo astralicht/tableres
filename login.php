@@ -24,12 +24,22 @@ if (isset($_SESSION["id"])) {
 
         form {
             width: 550px;
-            min-width: 550px;
         }
 
         #message {
             display: none;
             text-align: center;
+        }
+
+        @media only screen and (max-width: 1000px) {
+            body {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            form {
+                width: 100%;
+            }
         }
     </style>
     <script src="scripts/DOM.js" defer></script>

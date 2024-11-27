@@ -22,6 +22,9 @@ if (!isset($_SESSION["id"])) {
 </head>
 <body full-width flex="h" no-gap>
     <div id="spa-menu" flex="v" full-height pad>
+        <div flex="h" h-end>
+            <button id="nav-close" flex="h" h-center v-center pad dark-bg white-fr><i class="fa-solid fa-x"></i></button>
+        </div>
         <p white-fr style="text-align: center;" id="menu-title">Restaurant Table Reservation</p>
         <button class="spa-nav-button" id="reservations" active><i class="fa-solid fa-phone"></i>Reservations</button>
         <div flex="v" grow v-end>
@@ -30,8 +33,9 @@ if (!isset($_SESSION["id"])) {
             <button white-fr full-width class="spa-nav-button" id="settings"><i class="fa-solid fa-gear"></i>Settings</button>
         </div>
     </div>
-    <div id="partials-container" flex="h" grow>
+    <div id="partials-container" flex="v" grow no-gap>
         <div class="spa-content-container">
+        <button id="nav-toggle" flex="h" h-center v-center pad dark-bg white-fr><i class="fa-solid fa-bars"></i></button>
             <?php include_once("partials/_reservations.html"); ?>
             <?php include_once("partials/_create_res.html"); ?>
             <?php include_once("partials/_update_res.html"); ?>

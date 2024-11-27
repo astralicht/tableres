@@ -6,7 +6,7 @@ let timeslotSelects = elems("select#timeslot");
 
 resFetch();
 
-codeFilterInput.onchange = function() {
+codeFilterInput.onkeyup = function() {
     resFetch(dateFilterInput.value, codeFilterInput.value);
 }
 
@@ -153,8 +153,6 @@ updateResForm.onsubmit = function(element) {
     });
 
     params["reservations"] = "update";
-
-    console.log(params);
 
     asyncFetch(
         "api.php",

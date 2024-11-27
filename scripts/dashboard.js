@@ -5,6 +5,19 @@ currentVisiblePage.style.opacity = "1";
 let currentActiveNavButton = elem("div#spa-menu button.spa-nav-button#reservations");
 let previousPage;
 
+window.onresize = function() {
+    let spaMenu = elem("div#spa-menu");
+    if (document.body.clientWidth > 1000) {
+        spaMenu.style.display = "flex";
+        spaMenu.style.width = "250px";
+        spaMenu.style.opacity = "1";
+    } else {
+        spaMenu.style.display = "none";
+        spaMenu.style.width = "100%";
+        spaMenu.style.opacity = "0";
+    }
+}
+
 Array.from(elems("div#spa-menu button.spa-nav-button")).forEach(button => {
     button.onclick = ()=>{
         currentActiveNavButton.removeAttribute("active");
@@ -16,10 +29,16 @@ Array.from(elems("div#spa-menu button.spa-nav-button")).forEach(button => {
             return;
         }
 
-        fadeOut(currentVisiblePage);
-        setTimeout(()=>{
-            currentVisiblePage = elem(`div.spa-content-container div#${button.id}`);
-            fadeIn(currentVisiblePage);
+        if (screen.availWidth <= 1000) {
+            fadeOut(elem("div#spa-menu"));
+        }
+
+        setTimeout(() => {
+            fadeOut(currentVisiblePage);
+            setTimeout(()=>{
+                currentVisiblePage = elem(`div.spa-content-container div#${button.id}`);
+                fadeIn(currentVisiblePage);
+            }, 300);
         }, 150);
     }
 })
@@ -79,4 +98,16 @@ elem("div#update-res button#back-button").onclick = function() {
         previousPage = undefined;
     }, 150);
     elem("form#create-res").reset();
+}
+
+let nav = elem("div#spa-menu");
+let navToggle = elem("button#nav-toggle");
+let navClose = elem("button#nav-close");
+
+navToggle.onclick = function() {
+    fadeInFlex(nav);
+}
+
+navClose.onclick = function() {
+    fadeOut(nav);
 }

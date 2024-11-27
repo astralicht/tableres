@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 24, 2024 at 11:07 AM
+-- Generation Time: Nov 27, 2024 at 03:06 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `tableres`
 --
-CREATE DATABASE IF NOT EXISTS `tableres` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `tableres`;
 
 -- --------------------------------------------------------
 
@@ -39,7 +37,7 @@ CREATE TABLE `reservations` (
   `guests_num` int(11) NOT NULL DEFAULT 1,
   `res_date` date DEFAULT NULL,
   `timeslot_id` int(11) DEFAULT NULL,
-  `date_added` datetime DEFAULT NULL,
+  `date_added` datetime DEFAULT current_timestamp(),
   `date_removed` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -48,7 +46,9 @@ CREATE TABLE `reservations` (
 --
 
 INSERT INTO `reservations` (`id`, `code`, `user_id`, `name`, `email`, `phone`, `guests_num`, `res_date`, `timeslot_id`, `date_added`, `date_removed`) VALUES
-(1, 'MjAyNDExMjQxMA', NULL, 'Juan Dela Cruz', 'email@email.com', '09123456789', 4, '2024-11-24', 5, '2024-10-26 03:49:13', NULL);
+(1, '61137d', NULL, 'a', 'a@a', NULL, 2353565, '2024-11-28', 1, '2024-10-26 03:49:13', NULL),
+(3, '611388', NULL, 'a', 'a@a', NULL, 2353565, '2024-11-27', 3, '2024-11-27 11:30:03', NULL),
+(4, '611387', NULL, 'a', 'a@a', NULL, 2353565, '2024-11-27', 3, '2024-11-27 11:38:09', NULL);
 
 -- --------------------------------------------------------
 
@@ -92,6 +92,7 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `username` varchar(50) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
+  `name` varchar(100) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `phone` varchar(100) DEFAULT NULL,
   `type` int(1) DEFAULT 3,
@@ -103,8 +104,10 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `email`, `phone`, `type`, `date_added`, `date_removed`) VALUES
-(1, 'admin', '$2y$10$a64WrFZB7hm5ZA93DkQYcOM8AwJrCv54sMvWiGhNFIIN4yMfzMD/q', NULL, NULL, 1, '2024-10-16 18:30:24', NULL);
+INSERT INTO `users` (`id`, `username`, `password`, `name`, `email`, `phone`, `type`, `date_added`, `date_removed`) VALUES
+(1, 'admin', '$2y$10$a64WrFZB7hm5ZA93DkQYcOM8AwJrCv54sMvWiGhNFIIN4yMfzMD/q', NULL, NULL, NULL, 1, '2024-10-16 18:30:24', NULL),
+(2, 'user1', '$2y$10$qADfhpec4osqJda8RGL/zOkAtTCa0i6eqCReRUyMIz5zlPGoaqnxW', NULL, 'email@email.com', NULL, 3, '2024-11-27 12:17:32', NULL),
+(3, 'user2', '$2y$10$rdj/4xpEM/tiKflsFmU95OtU0L.CrvSBG1VlbGOnEyqrKNF8wByju', 'user2', 'email2@email.com', NULL, 3, '2024-11-27 12:19:01', NULL);
 
 --
 -- Indexes for dumped tables
@@ -136,7 +139,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `reservations`
 --
 ALTER TABLE `reservations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `timeslots`
@@ -148,7 +151,7 @@ ALTER TABLE `timeslots`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
